@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Feedback = require("../models/Feedback");
 
-// POST – Add feedback
 router.post("/", async (req, res) => {
   try {
     const feedback = new Feedback(req.body);
@@ -13,7 +12,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET – Get all feedbacks
+
 router.get("/", async (req, res) => {
   try {
     const feedbacks = await Feedback.find().sort({ createdAt: -1 });
@@ -23,7 +22,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// DELETE – Delete feedback by ID
 router.delete("/:id", async (req, res) => {
   try {
     await Feedback.findByIdAndDelete(req.params.id);

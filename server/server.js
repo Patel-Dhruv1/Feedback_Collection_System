@@ -1,22 +1,19 @@
-// Load environment variables from .env file
+
 require("dotenv").config();
 
-// server.js content follows...
 
-// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
-// Initialize the app
+
 const app = express();
 
-// Use middleware
 app.use(cors());
-app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.json()); 
 
-// Connect to MongoDB Atlas
+
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
@@ -26,14 +23,14 @@ mongoose
     console.log("❌ MongoDB connection error:", error);
   });
 
-// Feedback Schema
+
 const feedbackSchema = new mongoose.Schema({
   name: String,
   email: String,
   message: String,
 });
 
-// Feedback Model
+
 const Feedback = mongoose.model("Feedback", feedbackSchema);
 
 app.post("/api/feedback", (req, res) => {
@@ -63,7 +60,7 @@ app.post("/api/feedback", (req, res) => {
         });
     });
 });
-// Endpoint to get all feedbacks
+
 app.get('/api/feedbacks', (req, res) => {
   Feedback.find()
     .then((feedbacks) => {
@@ -76,7 +73,7 @@ app.get('/api/feedbacks', (req, res) => {
 });
 
 
-// Server Setup
+
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`🚀 Server running on http://localhost:${port}`);

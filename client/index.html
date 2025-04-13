@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Feedback Collection System</title>
 
-  <!-- Bootstrap CSS for styling -->
+  
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- AngularJS CDN -->
+
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 </head>
 <body ng-app="feedbackApp" ng-controller="FeedbackController">
@@ -54,12 +54,12 @@
     </div>
   </div>
 
-  <!-- AngularJS Script -->
+  
   <script>
     var app = angular.module('feedbackApp', []);
 
     app.controller('FeedbackController', function($scope, $http) {
-      // Initialize feedback model
+ 
       $scope.feedback = {
         name: '',
         email: '',
@@ -70,7 +70,6 @@
       $scope.errorMessage = '';
       $scope.feedbacks = [];
 
-      // Fetch all feedbacks from the server
       $scope.fetchFeedbacks = function() {
         $http.get('http://localhost:5000/api/feedbacks')
           .then(function(response) {
@@ -80,24 +79,24 @@
           });
       };
 
-      // Submit feedback function
+    
       $scope.submitFeedback = function() {
-        // Post the feedback to the server
+       
         $http.post('http://localhost:5000/api/feedback', $scope.feedback)
           .then(function(response) {
-            // Success
+       
             $scope.successMessage = 'Your feedback has been submitted successfully!';
             $scope.errorMessage = '';
-            $scope.feedback = {}; // Reset the form
-            $scope.fetchFeedbacks(); // Reload feedback list after submission
+            $scope.feedback = {}; 
+            $scope.fetchFeedbacks(); 
           }, function(error) {
-            // Error
+       
             $scope.successMessage = '';
             $scope.errorMessage = 'There was an error submitting your feedback. Please try again later.';
           });
       };
 
-      // Call fetchFeedbacks when the page loads
+      
       $scope.fetchFeedbacks();
     });
   </script>

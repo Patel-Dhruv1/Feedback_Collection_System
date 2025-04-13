@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Collection System</title>
+
+  <!-- Bootstrap CSS for styling -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- AngularJS CDN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+<body ng-app="feedbackApp" ng-controller="FeedbackController">
+
+  <div class="container mt-5">
+    <h2>Feedback Form</h2>
+    <form ng-submit="submitFeedback()" class="mt-4">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" class="form-control" ng-model="feedback.name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" class="form-control" ng-model="feedback.email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" class="form-control" ng-model="feedback.message" rows="4" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+
+    <div class="alert mt-4" ng-show="successMessage" role="alert">
+      {{ successMessage }}
+    </div>
+
+    <div class="alert alert-danger mt-4" ng-show="errorMessage" role="alert">
+      {{ errorMessage }}
+    </div>
+
+    <hr>
+
+    <h3>All Feedbacks</h3>
+    <div id="feedbackList">
+      <div class="feedback-item" ng-repeat="feedback in feedbacks">
+        <p><strong>{{ feedback.name }}</strong> ({{ feedback.email }})</p>
+        <p>{{ feedback.message }}</p>
+        <hr>
+      </div>
+    </div>
+  </div>
+
+  <!-- AngularJS Script -->
+  <script>
+    var app = angular.module('feedbackApp', []);
+
+    app.controller('FeedbackController', function($scope, $http) {
+      // Initialize feedback model
+      $scope.feedback = {
+        name: '',
+        email: '',
+        message: ''
+      };
+
+      $scope.successMessage = '';
+      $scope.errorMessage = '';
+      $scope.feedbacks = [];
+
+      // Fetch all feedbacks from the server
+      $scope.fetchFeedbacks = function() {
+        $http.get('http://localhost:5000/api/feedbacks')
+          .then(function(response) {
+            $scope.feedbacks = response.data;
+          }, function(error) {
+            console.error('Error fetching feedbacks:', error);
+          });
+      };
+
+      // Submit feedback function
+      $scope.submitFeedback = function() {
+        // Post the feedback to the server
+        $http.post('http://localhost:5000/api/feedback', $scope.feedback)
+          .then(function(response) {
+            // Success
+            $scope.successMessage = 'Your feedback has been submitted successfully!';
+            $scope.errorMessage = '';
+            $scope.feedback = {}; // Reset the form
+            $scope.fetchFeedbacks(); // Reload feedback list after submission
+          }, function(error) {
+            // Error
+            $scope.successMessage = '';
+            $scope.errorMessage = 'There was an error submitting your feedback. Please try again later.';
+          });
+      };
+
+      // Call fetchFeedbacks when the page loads
+      $scope.fetchFeedbacks();
+    });
+  </script>
+
+</body>
+</html>
